@@ -2,13 +2,9 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=luci-app-ffwizard-berlin
-PKG_VERSION:=0.0.15-SAm0815
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
-include $(INCLUDE_DIR)/package.mk
+include ../../freifunk-berlin-generic.mk
 
 define Package/luci-app-ffwizard-berlin
   SECTION:=luci
@@ -29,13 +25,6 @@ define Build/Prepare
 	$(CP) ./luasrc $(PKG_BUILD_DIR)/
 endef
 
-define Build/Configure
-endef
-
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)/luasrc
-endef
-
 define Package/luci-app-ffwizard-berlin/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model
@@ -52,5 +41,3 @@ define Package/luci-app-ffwizard-berlin/install
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
 	$(CP) ./root/usr/libexec/rpcd/* $(1)/usr/libexec/rpcd/
 endef
-
-$(eval $(call BuildPackage,luci-app-ffwizard-berlin))
