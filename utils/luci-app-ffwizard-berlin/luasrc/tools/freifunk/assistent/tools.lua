@@ -72,21 +72,12 @@ function hasRootPass()
 	local f = io.popen("wget http://localhost/ubus -q -O - --post-data '{ \"jsonrpc\": \"2.0\", \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"ffwizard-berlin\", \"has_root-pass\", {} ] }'")
 	local ret = f:read("*a")
 	f:close()
-	logger(ret)
 	local jsonc = require "luci.jsonc"
 	
 	local content = jsonc.parse(ret)
-
-	logger(content.jsonrpc) -- should be 2.0
-	logger(tostring(content.id)) -- is nil, as per requests id?
 	local reply = content.result
- 	for i,line in ipairs(reply) do
-	      logger(tostring(line))
-    	end
-	logger("debug2")
-	
 	local result = reply[2]
-	logger(result.password_is_set)
+	logger("result: "..result.password_is_set)
 
 	return result.password_is_set
 end
