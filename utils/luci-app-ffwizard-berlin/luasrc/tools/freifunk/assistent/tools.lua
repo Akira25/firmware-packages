@@ -79,19 +79,16 @@ function hasRootPass()
 
 	logger(content.jsonrpc) -- should be 2.0
 	logger(tostring(content.id)) -- is nil, as per requests id?
-	local result = content.result
- 	for i,line in ipairs(result) do
+	local reply = content.result
+ 	for i,line in ipairs(reply) do
 	      logger(tostring(line))
     	end
 	logger("debug2")
 	
-	local test = result[2]
-	logger(test.password_is_set)
+	local result = reply[2]
+	logger(result.password_is_set)
 
-	if test.password_is_set == "no" then
-		isPasswordSet = false
-	end
-	return isPasswordSet
+	return result.password_is_set
 end
 
 

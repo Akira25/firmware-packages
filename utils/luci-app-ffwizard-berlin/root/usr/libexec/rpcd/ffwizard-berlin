@@ -14,9 +14,9 @@ case "$1" in
 USER=root
 # taken from http://serverfault.com/a/240961
 grep ${USER} /etc/shadow | awk -F":" '{ if ($2 == "!" || $2 == "") \
-                printf "{ \"password_is_set\" : \"no\" }";\
+                printf "{ \"password_is_set\" : \"false\" }";\
         else \
-                printf "{ \"password_is_set\" : \"yes\" }"\
+                printf "{ \"password_is_set\" : \"true\" }"\
         }'
       ;;
     esac
