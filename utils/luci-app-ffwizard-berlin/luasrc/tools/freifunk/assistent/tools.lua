@@ -66,20 +66,22 @@ end
 
 -- checks if root-password has been set via CGI has_root-pass 
 function hasRootPass()
-	logger ("checking for root-password ...")
-
+	local jsonc = require "luci.jsonc"
 	local isPasswordSet = true
+
 	local f = io.popen("wget http://localhost/ubus -q -O - --post-data '{ \"jsonrpc\": \"2.0\", \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"ffwizard-berlin\", \"has_root-pass\", {} ] }'")
 	local ret = f:read("*a")
 	f:close()
-	local jsonc = require "luci.jsonc"
-	
-	local content = jsonc.parse(ret)
-	local reply = content.result
-	local result = reply[2]
-	logger("result: "..result.password_is_set)
 
-	return result.password_is_set
+	local content = jsonc.parse(ret)
+	local result = content.result
+	local test = result[2]
+	logger ("checking for root-password ..." .. test.password_is_set)
+
+	if test.password_is_set == "no" then
+		isPasswordSet = false
+	end
+	return isPasswordSet
 end
 
 
