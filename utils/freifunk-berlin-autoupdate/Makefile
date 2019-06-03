@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=freifunk-berlin-autoupdate
-PKG_VERSION:=0.9.0
+PKG_VERSION:=0.7.0
 PKG_RELEASE:=0
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
