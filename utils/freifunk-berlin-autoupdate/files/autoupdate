@@ -25,7 +25,12 @@ JSON_LINK_DEV=$(uci -q get autoupdate.internal_settings.json_link_dev)
 LAST_UPGR=$(uci -q get autoupdate.upgrade_date.last_upgr)
 
 
-### function stuff ###
+#####################
+#                   #
+#  function stuff   #
+#                   #
+#####################
+
 
 get_branch () {
   case $BRANCH in
@@ -49,7 +54,7 @@ verify_def () {
     usign -V -p $CERT -m "$PATH_JSON" -x "$PATH_JSON".sig
     if [ $? = 0 ]; then
       logger -t "autoupdate" "Link definition file match with $CERT"
-      echo "Link definition file math with $CERT"
+      echo "Link definition file matches with $CERT"
       echo "Verification successful."
       return 0
       break
@@ -138,11 +143,18 @@ write_update_date () {
 }
 
 
+#####################
+#                   #
+#   Programm Part   #
+#                   #
+#####################
 
 
+
+case $1 in
+-a)
 ### automatic backup ###
-
-if [ "$1" = "a" ] && [ "$AUTO" = "on" -o "$AUTO" = "true" -o "$AUTO" = "1" -o "$AUTO" = "yes" ]; then
+if [ "$AUTO" = "on" -o "$AUTO" = "true" -o "$AUTO" = "1" -o "$AUTO" = "yes" ]; then
   get_branch
   get_def
   if [ ! -e $PATH_JSON ]; then
@@ -168,11 +180,13 @@ if [ "$1" = "a" ] && [ "$AUTO" = "on" -o "$AUTO" = "true" -o "$AUTO" = "1" -o "$
   exit 1
 fi
 
-if [ "$1" = "a" ] && [ "$AUTO" != "on" -o "$AUTO" != "true" -o "$AUTO" != "1" -o "$AUTO" != "yes" ]; then
+if [ "$AUTO" != "on" -o "$AUTO" != "true" -o "$AUTO" != "1" -o "$AUTO" != "yes" ]; then
   echo "Automatic mode is set off in config file. Set it on in /etc/config/autoupdate "
   exit 1
 fi
+;;
 
+-m)
 ### manual backup ###
 
 get_branch
@@ -273,3 +287,16 @@ echo "Start flashing the image now."
 write_update_date
 
 sysupgrade $PATH_BIN
+;;
+
+*)
+  echo -e "
+Usage: autoupdate <option>
+
+Options:
+  -a	automatic mode
+  -m	manual mode (requires user interaction)
+  -r	do a remote backup
+"
+;;
+esac
